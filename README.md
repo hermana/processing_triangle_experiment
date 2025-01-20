@@ -1,1 +1,1 @@
-# processing_triangle_experiment
+# Processing Triangle Experiment
