@@ -5,6 +5,8 @@
  int COLUMN_SIZE=50;
  int TRIANGLE_SIZE=45;
  
+ ExperimentPhase phase;
+ 
   //////////////////////////////// ICON CLASS /////////////////////////////////////////////////////
  
 class Icon { 
@@ -81,20 +83,43 @@ class Icon {
 void setup() {
   size(1080, 1080); 
   stroke(153);
+  PFont myFont = createFont("Arial", 32, true); 
+  textFont(myFont);
+  phase = ExperimentPhase.INSTRUCTIONS;
 
 }
 
 void draw() {
+  
   // TODO: add a switch statement to track which phase we are in, in mousepressed as well 
-  ExperimentPhase phase = ExperimentPhase.INSTRUCTIONS;
-  background(51); 
-  fill(255, 204);
-  stroke(0);
-  pushMatrix();
-  translate(width/4, height/4);
-  rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE + (ROW_SIZE*2), GRID_SIZE*COLUMN_SIZE + (COLUMN_SIZE*2));
-  grid(GRID_SIZE, GRID_SIZE);
-  popMatrix();
+  background(200);
+  switch(phase){
+    case INSTRUCTIONS:
+      fill(0);
+      textAlign(CENTER); //FIXME: can this and the fill be everywhere
+      text("Instructions", (width/2), height/2);
+      text("Click to continue.", (width/2), (height/2)+50);
+      break;
+    case BEFORE_CONDITION: 
+      text("before condition", width/2, height/2);
+      break;
+    case BEFORE_TRIAL: 
+      text("before trial", width/2, height/2);
+      break;
+    case TRIAL: 
+      background(200);
+      fill(255, 204); // FIXME: do i need this
+      stroke(0);
+      pushMatrix();
+      translate(width/4, height/4);
+      rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE + (ROW_SIZE*2), GRID_SIZE*COLUMN_SIZE + (COLUMN_SIZE*2));
+      grid(GRID_SIZE, GRID_SIZE);
+      popMatrix();
+      break;
+    case FINISHED: 
+      text("finished", width/2, height/2);
+      break;
+}
 }
 
 void grid(int rows, int columns) {
