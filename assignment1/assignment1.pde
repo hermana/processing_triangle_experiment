@@ -56,6 +56,10 @@ class Icon {
     int totalSuccessfulTrials;
     int totalErrorTrials;
     
+    void update_current_trial(){
+      currentTrial+=1;
+    }
+    
     Condition(String cName, String cInstructions, ManipulationType cManipulationType, int cMaxRotation, int cMaxColour, int cNumTrials, int cTargetColourIncrease, int cTargetRotationIncrease){
       name = cName;
       instructions = cInstructions;
@@ -97,7 +101,7 @@ void setup() {
   textAlign(CENTER);
   
   condition = new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", 
-                                        ManipulationType.COLOUR, 90, 50, 10, 255, 45); //FIXME: basecolour 50 is too low apparently
+                                        ManipulationType.COLOUR, 0, 50, 10, 255, 45); //FIXME: basecolour 50 is too low apparently
   
   phase = ExperimentPhase.INSTRUCTIONS;
   grid_setup(condition);
@@ -152,7 +156,7 @@ void mouseClicked() {
       phase = ExperimentPhase.TRIAL;
       break;
     case TRIAL: 
-      if(grid_is_target_clicked()){ 
+      if(grid_is_target_clicked() && condition.currentTrial >= condition.numTrials+1){ 
         phase = ExperimentPhase.FINISHED;
       }
       break;
@@ -199,6 +203,8 @@ boolean grid_is_target_clicked(){
             if(grid[row][column].isTarget && coords_in_triangle(mouseX, mouseY, (row*ROW_SIZE)+TRIANGLE_SIZE/2+width/4, (column*COLUMN_SIZE)-TRIANGLE_SIZE+height/4,
                        (row*ROW_SIZE)+TRIANGLE_SIZE+width/4, (column*COLUMN_SIZE)+height/4, 
                        (row*ROW_SIZE)+width/4, (column*COLUMN_SIZE)+height/4)){
+                         grid_setup(condition);
+                         condition.update_current_trial();
                          return true;
                        }
     }
