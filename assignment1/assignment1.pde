@@ -38,25 +38,25 @@ class Icon {
   class Condition {
   
     String name;
+    String instructions;
     ManipulationType manipulationType;
     int maxRotation;
     int maxColour; // should this be an int?
     //POSSIBLY A SEPERATE VARIABLE: the increase in the amount of rotation or colour that should be applied to the target icon (beyond the baseline)
     int numTrials;
+    int currentTrial;
     int totalTime;
     int totalSuccessfulTrials;
     int totalErrorTrials;
     
-    Condition(String cName, ManipulationType cManipulationType, int cMaxRotation, int cMaxColour, int cNumTrials, int cTotalTime, int cNumSuccessfulTrials, int cTotalErrorTrials){
+    Condition(String cName, String cInstructions, ManipulationType cManipulationType, int cMaxRotation, int cMaxColour, int cNumTrials){
       name = cName;
+      instructions = cInstructions;
       manipulationType = cManipulationType;
       maxRotation = cMaxRotation;
       maxColour = cMaxColour;
       numTrials = cNumTrials;
-      totalTime = cTotalTime; //should this just start at zero? and is there an appropriate data type for it?
-      totalSuccessfulTrials = cNumSuccessfulTrials;
-      totalErrorTrials = cTotalErrorTrials;
-      
+      currentTrial = 1;
     }
   
   }
@@ -90,7 +90,8 @@ void setup() {
 }
 
 void draw() {
-  
+
+  Condition condition = new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 90, 20, 2);
   // TODO: add a switch statement to track which phase we are in, in mousepressed as well 
   background(200);
   switch(phase){
@@ -101,10 +102,13 @@ void draw() {
       text("Click to continue.", (width/2), (height/2)+50);
       break;
     case BEFORE_CONDITION: 
-      text("before condition", width/2, height/2);
+      text(condition.name, (width/2), height/2);
+      text(condition.instructions, (width/2), (height/2)+50);
+      text("Click to continue.", (width/2), (height/2)+200);
       break;
     case BEFORE_TRIAL: 
-      text("before trial", width/2, height/2);
+      text("Trial "+ str(condition.currentTrial) +" of "+ str(condition.numTrials), width/2-10, height/2);
+      text("Click to continue.", (width/2), (height/2)+150);
       break;
     case TRIAL: 
       background(200);
@@ -117,10 +121,35 @@ void draw() {
       popMatrix();
       break;
     case FINISHED: 
-      text("finished", width/2, height/2);
+      fill(0);
+      text("This trial has finished.", width/2, height/2);
+      text("Click to continue.", (width/2), (height/2)+150);
       break;
 }
 }
+
+
+void mouseClicked() {
+  switch(phase){
+    case INSTRUCTIONS:
+      phase = ExperimentPhase.BEFORE_CONDITION;
+      break;
+    case BEFORE_CONDITION: 
+      phase = ExperimentPhase.BEFORE_TRIAL;
+      break;
+    case BEFORE_TRIAL: 
+      phase = ExperimentPhase.TRIAL;
+      break;
+    case TRIAL: 
+      phase = ExperimentPhase.FINISHED;
+      break;
+    case FINISHED: 
+      print("mouse clicked!");
+      break;
+}
+}
+
+/////////////////////////////// HELPERS //////////////////////////////////////////////////////////////////
 
 void grid(int rows, int columns) {
   for (int row = 0; row < rows; row++) {
