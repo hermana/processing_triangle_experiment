@@ -7,6 +7,7 @@
  
  ExperimentPhase phase;
  Icon[][] grid;
+ Condition condition;
   //////////////////////////////// ICON CLASS /////////////////////////////////////////////////////
  
 class Icon { 
@@ -46,6 +47,8 @@ class Icon {
     ManipulationType manipulationType;
     int maxRotation;
     int maxColour; // should this be an int?
+    int targetColourIncrease;
+    int targetRotationIncrease;
     //POSSIBLY A SEPERATE VARIABLE: the increase in the amount of rotation or colour that should be applied to the target icon (beyond the baseline)
     int numTrials;
     int currentTrial;
@@ -53,12 +56,14 @@ class Icon {
     int totalSuccessfulTrials;
     int totalErrorTrials;
     
-    Condition(String cName, String cInstructions, ManipulationType cManipulationType, int cMaxRotation, int cMaxColour, int cNumTrials){
+    Condition(String cName, String cInstructions, ManipulationType cManipulationType, int cMaxRotation, int cMaxColour, int cNumTrials, int cTargetColourIncrease, int cTargetRotationIncrease){
       name = cName;
       instructions = cInstructions;
       manipulationType = cManipulationType;
       maxRotation = cMaxRotation;
       maxColour = cMaxColour;
+      targetColourIncrease = cTargetColourIncrease;
+      targetRotationIncrease = cTargetRotationIncrease;
       numTrials = cNumTrials;
       currentTrial = 1;
     }
@@ -90,13 +95,17 @@ void setup() {
   PFont myFont = createFont("Arial", 32, true); 
   textFont(myFont);
   textAlign(CENTER);
+  
+  condition = new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", 
+                                        ManipulationType.COLOUR, 90, 50, 10, 255, 45); //FIXME: basecolour 50 is too low apparently
+  
   phase = ExperimentPhase.INSTRUCTIONS;
-  grid_setup();
+  grid_setup(condition);
 }
 
 void draw() {
-
-  Condition condition = new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 90, 20, 2); 
+  
+  
   background(200);
   switch(phase){
     case INSTRUCTIONS:
@@ -155,18 +164,26 @@ void mouseClicked() {
 /////////////////////////////// HELPERS //////////////////////////////////////////////////////////////////
 
 //TODO make grid into a class
-void grid_setup() {
+void grid_setup(Condition condition) {
   grid = new Icon[GRID_SIZE][GRID_SIZE];
   int targetRow = int(random(GRID_SIZE));
   int targetColumn = int(random(GRID_SIZE));
   for (int row = 0; row < GRID_SIZE; row++) {
     for (int column = 0; column < GRID_SIZE; column++) {
       boolean isTarget = (row == targetRow && column == targetColumn) ? true : false;
-      color triangleColour = isTarget ? color(0, 255, 0) : color(255, 255, 255);
+      int targetColourParam = condition.maxColour + condition.targetColourIncrease <= 255 ? condition.maxColour + condition.targetColourIncrease : 255;
+      color triangleColour = isTarget ? color(0, targetColourParam, 0) : grid_generate_triangle_colour(condition.maxColour);
       grid[row][column] = new Icon(row, column, 0, triangleColour, isTarget);
     }
   }
 }
+
+color grid_generate_triangle_colour(int maxColour) {
+  color from = color(255, 255, 255);
+  color to = color(144, 255, 144);
+  return lerpColor(from, to, random(maxColour)/100);
+}
+
 
 void grid_draw(){
   for (int row = 0; row < GRID_SIZE; row++) {
@@ -196,14 +213,11 @@ float get_triangle_area(float ax, float ay, float bx, float by, float cx, float 
 }
 
 boolean coords_in_triangle(float test_x, float test_y, float x1, float y1, float x2, float y2, float x3, float y3) {
-  // Calculate the total area of the original triangle
   float totalArea = get_triangle_area(x1, y1, x2, y2, x3, y3);
 
-  // Calculate the areas of the three sub-triangles formed with the point
   float area1 = get_triangle_area(test_x, test_y, x2, y2, x3, y3);
   float area2 = get_triangle_area(x1, y1, test_x, test_y, x3, y3);
   float area3 = get_triangle_area(x1, y1, x2, y2, test_x, test_y);
 
-  // Check if the sum of the sub-triangle areas equals the total area
-  return abs(totalArea - (area1 + area2 + area3)) < 0.0001; // Allow a small margin for floating-point errors
+  return abs(totalArea - (area1 + area2 + area3)) < 0.0001; // margin for floating point error
 }
