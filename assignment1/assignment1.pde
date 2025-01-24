@@ -122,6 +122,7 @@ void draw() {
       text("Click to continue.", width/2, (height/2)+200);
       break;
     case BEFORE_TRIAL: 
+      fill(0);
       text("Trial "+ str(condition.currentTrial) +" of "+ str(condition.numTrials), width/2-10, height/2);
       text("Click to continue.", width/2, (height/2)+150);
       break;
@@ -156,8 +157,12 @@ void mouseClicked() {
       phase = ExperimentPhase.TRIAL;
       break;
     case TRIAL: 
-      if(grid_is_target_clicked() && condition.currentTrial >= condition.numTrials+1){ 
-        phase = ExperimentPhase.FINISHED;
+      if(grid_is_target_clicked()){
+       if(condition.currentTrial >= condition.numTrials+1){
+         phase = ExperimentPhase.FINISHED;
+       }else{
+         phase = ExperimentPhase.BEFORE_TRIAL;
+       }
       }
       break;
     case FINISHED: 
