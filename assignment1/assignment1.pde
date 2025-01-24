@@ -117,7 +117,7 @@ void draw() {
       fill(255, 204); // default colour
       stroke(0);
       pushMatrix();
-      translate(width/4, height/4);
+      translate(width/4, height/4); //TODO: rename to semantic meaning, used them in grid. 
       rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE + (ROW_SIZE*2), GRID_SIZE*COLUMN_SIZE + (COLUMN_SIZE*2));
       grid_draw();
       popMatrix();
@@ -143,10 +143,11 @@ void mouseClicked() {
       phase = ExperimentPhase.TRIAL;
       break;
     case TRIAL: 
-      phase = ExperimentPhase.FINISHED;
+      if(grid_is_target_clicked()){ 
+        phase = ExperimentPhase.FINISHED;
+      }
       break;
     case FINISHED: 
-      print("mouse clicked!");
       break;
 }
 }
@@ -173,4 +174,18 @@ void grid_draw(){
       grid[row][column].drawIcon();
     }
   }
+}
+
+boolean grid_is_target_clicked(){
+  for (int row = 0; row < GRID_SIZE; row++) {
+    for (int column = 0; column < GRID_SIZE; column++) {
+      if (mouseX > (row*ROW_SIZE) + width/4 && mouseX < (row*ROW_SIZE) + COLUMN_SIZE + width/4 
+          && mouseY > column*COLUMN_SIZE + - ROW_SIZE + height/4 && mouseY < (column*COLUMN_SIZE) + height/4) {
+          if(grid[row][column].isTarget){
+            return true;
+          }
+      }
+    }
+  }
+  return false;
 }
