@@ -179,13 +179,31 @@ void grid_draw(){
 boolean grid_is_target_clicked(){
   for (int row = 0; row < GRID_SIZE; row++) {
     for (int column = 0; column < GRID_SIZE; column++) {
-      if (mouseX > (row*ROW_SIZE) + width/4 && mouseX < (row*ROW_SIZE) + COLUMN_SIZE + width/4 
-          && mouseY > column*COLUMN_SIZE + - ROW_SIZE + height/4 && mouseY < (column*COLUMN_SIZE) + height/4) {
-          if(grid[row][column].isTarget){
-            return true;
-          }
-      }
+            if(grid[row][column].isTarget && coords_in_triangle(mouseX, mouseY, (row*ROW_SIZE)+TRIANGLE_SIZE/2+width/4, (column*COLUMN_SIZE)-TRIANGLE_SIZE+height/4,
+                       (row*ROW_SIZE)+TRIANGLE_SIZE+width/4, (column*COLUMN_SIZE)+height/4, 
+                       (row*ROW_SIZE)+width/4, (column*COLUMN_SIZE)+height/4)){
+                         return true;
+                       }
     }
   }
   return false;
+}
+
+///////////////////////////// SUM OF AREAS: CHECK IF POINT IS IN TRIANGLE //////////////////////////////////
+
+float get_triangle_area(float ax, float ay, float bx, float by, float cx, float cy) {
+    return abs((ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) / 2.0);
+}
+
+boolean coords_in_triangle(float test_x, float test_y, float x1, float y1, float x2, float y2, float x3, float y3) {
+  // Calculate the total area of the original triangle
+  float totalArea = get_triangle_area(x1, y1, x2, y2, x3, y3);
+
+  // Calculate the areas of the three sub-triangles formed with the point
+  float area1 = get_triangle_area(test_x, test_y, x2, y2, x3, y3);
+  float area2 = get_triangle_area(x1, y1, test_x, test_y, x3, y3);
+  float area3 = get_triangle_area(x1, y1, x2, y2, test_x, test_y);
+
+  // Check if the sum of the sub-triangle areas equals the total area
+  return abs(totalArea - (area1 + area2 + area3)) < 0.0001; // Allow a small margin for floating-point errors
 }
