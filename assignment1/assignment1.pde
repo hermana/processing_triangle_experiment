@@ -6,7 +6,7 @@
  int TRIANGLE_SIZE=45;
  
  ExperimentPhase phase;
- 
+ Icon[][] grid;
   //////////////////////////////// ICON CLASS /////////////////////////////////////////////////////
  
 class Icon { 
@@ -14,16 +14,20 @@ class Icon {
    int row;
    int column;
    int rotation;
+   color colour;
+   boolean isTarget;
   
-   Icon(int myRow, int myColumn, int myRotation) {  
+   Icon(int myRow, int myColumn, int myRotation, color myColour, boolean myIsTarget) {  
      row = myRow;
      column = myColumn;
      rotation = myRotation;
-
+     colour = myColour;
+     isTarget = myIsTarget;
   } 
   
   void drawIcon(){
    pushMatrix();
+   fill(colour);
    // ROTATE here
    translate(row*ROW_SIZE, column*COLUMN_SIZE);
    triangle(TRIANGLE_SIZE/2, -TRIANGLE_SIZE, TRIANGLE_SIZE, 0, 0, 0);
@@ -82,48 +86,46 @@ class Icon {
  
 void setup() {
   size(1080, 1080); 
-  stroke(153);
+  fill(0);    
   PFont myFont = createFont("Arial", 32, true); 
   textFont(myFont);
+  textAlign(CENTER);
   phase = ExperimentPhase.INSTRUCTIONS;
-
+  grid_setup();
 }
 
 void draw() {
 
-  Condition condition = new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 90, 20, 2);
-  // TODO: add a switch statement to track which phase we are in, in mousepressed as well 
+  Condition condition = new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 90, 20, 2); 
   background(200);
   switch(phase){
     case INSTRUCTIONS:
-      fill(0);
-      textAlign(CENTER); //FIXME: can this and the fill be everywhere
-      text("Instructions", (width/2), height/2);
-      text("Click to continue.", (width/2), (height/2)+50);
+      text("Instructions", width/2, height/2);
+      text("Click to continue.", width/2, (height/2)+50);
       break;
     case BEFORE_CONDITION: 
-      text(condition.name, (width/2), height/2);
-      text(condition.instructions, (width/2), (height/2)+50);
-      text("Click to continue.", (width/2), (height/2)+200);
+      text(condition.name, width/2, height/2);
+      text(condition.instructions, width/2, (height/2)+50);
+      text("Click to continue.", width/2, (height/2)+200);
       break;
     case BEFORE_TRIAL: 
       text("Trial "+ str(condition.currentTrial) +" of "+ str(condition.numTrials), width/2-10, height/2);
-      text("Click to continue.", (width/2), (height/2)+150);
+      text("Click to continue.", width/2, (height/2)+150);
       break;
     case TRIAL: 
       background(200);
-      fill(255, 204); // FIXME: do i need this
+      fill(255, 204); // default colour
       stroke(0);
       pushMatrix();
       translate(width/4, height/4);
       rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE + (ROW_SIZE*2), GRID_SIZE*COLUMN_SIZE + (COLUMN_SIZE*2));
-      grid(GRID_SIZE, GRID_SIZE);
+      grid_draw();
       popMatrix();
       break;
     case FINISHED: 
       fill(0);
       text("This trial has finished.", width/2, height/2);
-      text("Click to continue.", (width/2), (height/2)+150);
+      text("Click to continue.", width/2, (height/2)+150);
       break;
 }
 }
@@ -151,11 +153,24 @@ void mouseClicked() {
 
 /////////////////////////////// HELPERS //////////////////////////////////////////////////////////////////
 
-void grid(int rows, int columns) {
-  for (int row = 0; row < rows; row++) {
-    for (int column = 0; column < columns; column++) {
-      Icon icon = new Icon(row, column, 0);
-      icon.drawIcon();
+//TODO make grid into a class
+void grid_setup() {
+  grid = new Icon[GRID_SIZE][GRID_SIZE];
+  int targetRow = int(random(GRID_SIZE));
+  int targetColumn = int(random(GRID_SIZE));
+  for (int row = 0; row < GRID_SIZE; row++) {
+    for (int column = 0; column < GRID_SIZE; column++) {
+      boolean isTarget = (row == targetRow && column == targetColumn) ? true : false;
+      color triangleColour = isTarget ? color(0, 255, 0) : color(255, 255, 255);
+      grid[row][column] = new Icon(row, column, 0, triangleColour, isTarget);
+    }
+  }
+}
+
+void grid_draw(){
+  for (int row = 0; row < GRID_SIZE; row++) {
+    for (int column = 0; column < GRID_SIZE; column++) {
+      grid[row][column].drawIcon();
     }
   }
 }
