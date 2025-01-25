@@ -1,13 +1,17 @@
+ import java.util.ArrayList; 
+ 
  //////////////////////////////// CONSTANTS /////////////////////////////////////////////////////
  
  int GRID_SIZE=12;
  int ROW_SIZE=50;
  int COLUMN_SIZE=50;
  int TRIANGLE_SIZE=45;
+ int MAX_ATTEMPTS_PER_TRIAL = 3;
  
  ExperimentPhase phase;
  Icon[][] grid;
  Condition condition;
+ 
   //////////////////////////////// ICON CLASS /////////////////////////////////////////////////////
  
 class Icon { 
@@ -37,7 +41,21 @@ class Icon {
   }
 
 } 
+////////////////////////////////// TRIAL CLASS ////////////////////////////////////////////////////
 
+class Trial {
+
+  int startTime;
+  int endTime;
+  int maxAttempts;
+ 
+   int get_trial_time(){
+     return endTime - startTime;
+   }
+ 
+   Trial(){ 
+   }
+}
   //////////////////////////////// CONDITION CLASS /////////////////////////////////////////////////////
   
   class Condition {
@@ -55,8 +73,16 @@ class Icon {
     int totalTime;
     int totalSuccessfulTrials;
     int totalErrorTrials;
+    ArrayList<Trial> trials;
+    
+    void start_trial_timer(){
+      trials.get(currentTrial-1).startTime = millis();
+    }
     
     void update_current_trial(){
+      trials.get(currentTrial-1).endTime = millis();
+      print("The length of the trial was \n");
+      print(trials.get(currentTrial-1).get_trial_time());
       currentTrial+=1;
     }
     
@@ -70,6 +96,9 @@ class Icon {
       targetRotationIncrease = cTargetRotationIncrease;
       numTrials = cNumTrials;
       currentTrial = 1;
+      trials = new ArrayList<Trial>(numTrials);
+      for(int i=0; i<numTrials; i++){ trials.add(new Trial()); }
+      
     }
   
   }
