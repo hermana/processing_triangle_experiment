@@ -54,6 +54,8 @@ class Trial {
    }
  
    Trial(){ 
+     startTime = 0;
+     endTime = 0;
    }
 }
   //////////////////////////////// CONDITION CLASS /////////////////////////////////////////////////////
@@ -79,10 +81,12 @@ class Trial {
       trials.get(currentTrial-1).startTime = millis();
     }
     
+    void end_trial_timer(){
+      trials.get(currentTrial-1).endTime = millis();
+    }
+    
     void update_current_trial(){
       trials.get(currentTrial-1).endTime = millis();
-      print("The length of the trial was \n");
-      print(trials.get(currentTrial-1).get_trial_time());
       currentTrial+=1;
     }
     
@@ -184,14 +188,18 @@ void mouseClicked() {
       break;
     case BEFORE_TRIAL: 
       phase = ExperimentPhase.TRIAL;
+      condition.start_trial_timer();
       break;
     case TRIAL: 
       if(grid_is_target_clicked()){
-       if(condition.currentTrial >= condition.numTrials+1){
-         phase = ExperimentPhase.FINISHED;
-       }else{
-         phase = ExperimentPhase.BEFORE_TRIAL;
-       }
+          condition.end_trial_timer();
+          if(condition.currentTrial >= condition.numTrials){
+            phase = ExperimentPhase.FINISHED;
+          }else{
+             grid_setup(condition);
+             condition.update_current_trial();
+             phase = ExperimentPhase.BEFORE_TRIAL;
+          }
       }
       break;
     case FINISHED: 
@@ -237,8 +245,6 @@ boolean grid_is_target_clicked(){
             if(grid[row][column].isTarget && coords_in_triangle(mouseX, mouseY, (row*ROW_SIZE)+TRIANGLE_SIZE/2+width/4, (column*COLUMN_SIZE)-TRIANGLE_SIZE+height/4,
                        (row*ROW_SIZE)+TRIANGLE_SIZE+width/4, (column*COLUMN_SIZE)+height/4, 
                        (row*ROW_SIZE)+width/4, (column*COLUMN_SIZE)+height/4)){
-                         grid_setup(condition);
-                         condition.update_current_trial();
                          return true;
                        }
     }
