@@ -181,7 +181,7 @@ void setup() {
   textFont(myFont);
   textAlign(CENTER);
   // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using colour sequence 1, 5, 15, 30, 50)
-  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 30, 0));
+  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 5, 0));
   conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
   conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 60, 0));
   conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 80, 0));
@@ -253,7 +253,7 @@ void draw() {
       stroke(0);
       pushMatrix();
       translate(width/4, height/4); 
-      rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE, GRID_SIZE*COLUMN_SIZE);
+      rect(-ROW_SIZE, -TRIANGLE_SIZE, GRID_SIZE*ROW_SIZE + COLUMN_SIZE, GRID_SIZE*COLUMN_SIZE + ROW_SIZE);
       grid_draw();
       if(currentCondition.get_trial_elapsed_time() > MAX_TRIAL_TIME_MILLISECONDS){
         currentCondition.mark_current_trial_unsuccessful();
@@ -338,7 +338,7 @@ void grid_setup(Condition condition) {
       boolean isTarget = (row == targetRow && column == targetColumn) ? true : false;
       int targetColourParam = condition.maxColour + condition.targetColourIncrease <= 255 ? condition.maxColour + condition.targetColourIncrease : 255;
       //color triangleColour = isTarget && condition.manipulationType == ManipulationType.COLOUR ? color(144, targetColourParam, 144) : grid_generate_triangle_colour(condition.maxColour);
-      color triangleColour = isTarget && condition.manipulationType == ManipulationType.COLOUR ? lerpColor(color(255, 255, 255), color(144, 255, 144), targetColourParam/100) : grid_generate_triangle_colour(condition.maxColour);
+      color triangleColour = isTarget && condition.manipulationType == ManipulationType.COLOUR ? lerpColor(color(255, 255, 255), color(0, 255, 0), float(targetColourParam)/float(100)) : grid_generate_triangle_colour(condition.maxColour);
       int rotation = isTarget ? condition.maxRotation + condition.targetRotationIncrease : int(random(condition.maxRotation));
       grid[row][column] = new Icon(row, column, radians(rotation), triangleColour, isTarget);
     }
