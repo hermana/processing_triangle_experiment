@@ -87,6 +87,20 @@ class Trial {
     int totalErrorTrials;
     ArrayList<Trial> trials;
     
+    Condition(String cName, String cInstructions, ManipulationType cManipulationType, int cMaxRotation, int cMaxColour, int cNumTrials, int cTargetColourIncrease, int cTargetRotationIncrease){
+      name = cName;
+      instructions = cInstructions;
+      manipulationType = cManipulationType;
+      maxRotation = cMaxRotation;
+      maxColour = cMaxColour;
+      targetColourIncrease = cTargetColourIncrease;
+      targetRotationIncrease = cTargetRotationIncrease;
+      numTrials = cNumTrials;
+      currentTrial = 1;
+      trials = new ArrayList<Trial>(numTrials);
+      for(int i=0; i<numTrials; i++){ trials.add(new Trial()); }
+    }
+    
     void start_trial_timer(){
       trials.get(currentTrial-1).startTime = millis();
     }
@@ -120,20 +134,22 @@ class Trial {
       trials.get(currentTrial-1).successful= false;
     }
     
-    Condition(String cName, String cInstructions, ManipulationType cManipulationType, int cMaxRotation, int cMaxColour, int cNumTrials, int cTargetColourIncrease, int cTargetRotationIncrease){
-      name = cName;
-      instructions = cInstructions;
-      manipulationType = cManipulationType;
-      maxRotation = cMaxRotation;
-      maxColour = cMaxColour;
-      targetColourIncrease = cTargetColourIncrease;
-      targetRotationIncrease = cTargetRotationIncrease;
-      numTrials = cNumTrials;
-      currentTrial = 1;
-      trials = new ArrayList<Trial>(numTrials);
-      for(int i=0; i<numTrials; i++){ trials.add(new Trial()); }
-      
+    int get_total_completion_time(){
+      int total_time = 0;
+      for(int i=0; i<numTrials;i++){
+        total_time += trials.get(i).get_trial_time();
+      }
+      return total_time;
     }
+    
+    String get_manipulation_type_str(){
+      return manipulationType == ManipulationType.COLOUR ? "COLOUR" : "ROTATION";
+    }
+    
+    void print_results(){
+      print(name + " " + get_manipulation_type_str() + " " + str(maxColour) + " " + str(targetColourIncrease) + " " + str(get_total_completion_time()));
+    }
+    
   
   }
   
@@ -164,7 +180,7 @@ void setup() {
   textAlign(CENTER);
   
   condition = new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", 
-                                        ManipulationType.COLOUR, 0, 50, 10, 255, 45); //FIXME: basecolour 50 is too low apparently
+                                        ManipulationType.COLOUR, 0, 50, 10, 255, 45); 
   
   phase = ExperimentPhase.INSTRUCTIONS;
   grid_setup(condition);
@@ -230,6 +246,7 @@ void mouseClicked() {
       if(grid_is_target_clicked()){
           condition.end_trial_timer();
           if(condition.currentTrial >= condition.numTrials){
+            condition.print_results();
             phase = ExperimentPhase.FINISHED;
           }else{
              grid_setup(condition);
