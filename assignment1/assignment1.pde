@@ -22,11 +22,11 @@ class Icon {
   
    int row;
    int column;
-   int rotation;
+   float rotation;
    color colour;
    boolean isTarget;
   
-   Icon(int myRow, int myColumn, int myRotation, color myColour, boolean myIsTarget) {  
+   Icon(int myRow, int myColumn, float myRotation, color myColour, boolean myIsTarget) {  
      row = myRow;
      column = myColumn;
      rotation = myRotation;
@@ -37,10 +37,10 @@ class Icon {
   void drawIcon(){
    pushMatrix();
    fill(colour);
-   // ROTATE here
    translate(row*ROW_SIZE, column*COLUMN_SIZE);
-   triangle(TRIANGLE_SIZE/2, -TRIANGLE_SIZE, TRIANGLE_SIZE, 0, 0, 0);
-   line(TRIANGLE_SIZE/2, -TRIANGLE_SIZE, TRIANGLE_SIZE/2, 0);
+   rotate(rotation);
+   triangle(-TRIANGLE_SIZE/2, TRIANGLE_SIZE/2, TRIANGLE_SIZE/2, TRIANGLE_SIZE/2, 0, -TRIANGLE_SIZE/2);
+   line(0, -TRIANGLE_SIZE/2, 0, TRIANGLE_SIZE/2);
    popMatrix();
   }
 
@@ -181,8 +181,10 @@ void setup() {
   textFont(myFont);
   textAlign(CENTER);
   
-  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 255, 45));
-  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 255, 45));
+  conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 90));
+  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 255, 0));
+  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 255, 0));
+  //conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 90));
 
   conditionIndex = 0;
   currentCondition = conditions.get(conditionIndex);
@@ -215,7 +217,7 @@ void draw() {
       fill(255, 204); // default colour
       stroke(0);
       pushMatrix();
-      translate(width/4, height/4); //TODO: rename to semantic meaning, used them in grid. 
+      translate(width/4, height/4); 
       rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE + (ROW_SIZE*2), GRID_SIZE*COLUMN_SIZE + (COLUMN_SIZE*2));
       grid_draw();
       if(currentCondition.get_trial_elapsed_time() > MAX_TRIAL_TIME_MILLISECONDS){
@@ -290,8 +292,9 @@ void grid_setup(Condition condition) {
     for (int column = 0; column < GRID_SIZE; column++) {
       boolean isTarget = (row == targetRow && column == targetColumn) ? true : false;
       int targetColourParam = condition.maxColour + condition.targetColourIncrease <= 255 ? condition.maxColour + condition.targetColourIncrease : 255;
-      color triangleColour = isTarget ? color(0, targetColourParam, 0) : grid_generate_triangle_colour(condition.maxColour);
-      grid[row][column] = new Icon(row, column, 0, triangleColour, isTarget);
+      color triangleColour = isTarget && condition.manipulationType == ManipulationType.COLOUR ? color(0, targetColourParam, 0) : grid_generate_triangle_colour(condition.maxColour);
+      int rotation = isTarget ? condition.maxRotation + condition.targetRotationIncrease : int(random(condition.maxRotation));
+      grid[row][column] = new Icon(row, column, radians(rotation), triangleColour, isTarget);
     }
   }
 }
@@ -314,9 +317,9 @@ void grid_draw(){
 boolean grid_is_target_clicked(){
   for (int row = 0; row < GRID_SIZE; row++) {
     for (int column = 0; column < GRID_SIZE; column++) {
-            if(grid[row][column].isTarget && coords_in_triangle(mouseX, mouseY, (row*ROW_SIZE)+TRIANGLE_SIZE/2+width/4, (column*COLUMN_SIZE)-TRIANGLE_SIZE+height/4,
-                       (row*ROW_SIZE)+TRIANGLE_SIZE+width/4, (column*COLUMN_SIZE)+height/4, 
-                       (row*ROW_SIZE)+width/4, (column*COLUMN_SIZE)+height/4)){
+            if(grid[row][column].isTarget && coords_in_triangle(mouseX, mouseY, (row*ROW_SIZE)-TRIANGLE_SIZE/2+width/4, (column*COLUMN_SIZE)+(TRIANGLE_SIZE/2)+(height/4),
+                       (row*ROW_SIZE)+(TRIANGLE_SIZE/2)+(width/4), (column*COLUMN_SIZE)+(TRIANGLE_SIZE/2)+(height/4), 
+                       (row*ROW_SIZE)+width/4, (column*COLUMN_SIZE)-(TRIANGLE_SIZE/2)+(height/4))){
                          return true;
                        }
     }
@@ -329,6 +332,7 @@ boolean grid_is_target_clicked(){
 float get_triangle_area(float ax, float ay, float bx, float by, float cx, float cy) {
     return abs((ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) / 2.0);
 }
+
 
 boolean coords_in_triangle(float test_x, float test_y, float x1, float y1, float x2, float y2, float x3, float y3) {
   float totalArea = get_triangle_area(x1, y1, x2, y2, x3, y3);
