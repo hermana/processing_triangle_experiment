@@ -6,7 +6,9 @@
  int ROW_SIZE=50;
  int COLUMN_SIZE=50;
  int TRIANGLE_SIZE=45;
- int MAX_ATTEMPTS_PER_TRIAL = 3;
+ int MAX_INCORRECT_CLICKS_PER_TRIAL = 3;
+ int MAX_TRIAL_TIME_MILLISECONDS = 20000;
+ 
  
  ExperimentPhase phase;
  Icon[][] grid;
@@ -47,15 +49,23 @@ class Trial {
 
   int startTime;
   int endTime;
-  int maxAttempts;
- 
+  int incorrectClicks;
+  boolean successful;
+  
+
    int get_trial_time(){
      return endTime - startTime;
+   }
+   
+   int get_trial_elapsed_time(){
+     return millis() - startTime;
    }
  
    Trial(){ 
      startTime = 0;
      endTime = 0;
+     incorrectClicks=0;
+     successful = true; //we'll assume unless marked otherwise
    }
 }
   //////////////////////////////// CONDITION CLASS /////////////////////////////////////////////////////
@@ -85,9 +95,29 @@ class Trial {
       trials.get(currentTrial-1).endTime = millis();
     }
     
+    int get_trial_elapsed_time(){
+      return trials.get(currentTrial-1).get_trial_elapsed_time();
+    }
+    
+    void add_trial_incorrect_click(){
+      trials.get(currentTrial-1).incorrectClicks+=1;
+    }
+    
+    int get_trial_incorrect_clicks(){
+      return trials.get(currentTrial-1).incorrectClicks;
+    }
+    
+    void set_trial_incorrect_clicks(int clicks){
+      trials.get(currentTrial-1).incorrectClicks = clicks;
+    }
+    
     void update_current_trial(){
       trials.get(currentTrial-1).endTime = millis();
       currentTrial+=1;
+    }
+    
+    void mark_current_trial_unsuccessful(){
+      trials.get(currentTrial-1).successful= false;
     }
     
     Condition(String cName, String cInstructions, ManipulationType cManipulationType, int cMaxRotation, int cMaxColour, int cNumTrials, int cTargetColourIncrease, int cTargetRotationIncrease){
@@ -167,6 +197,12 @@ void draw() {
       translate(width/4, height/4); //TODO: rename to semantic meaning, used them in grid. 
       rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE + (ROW_SIZE*2), GRID_SIZE*COLUMN_SIZE + (COLUMN_SIZE*2));
       grid_draw();
+      if(condition.get_trial_elapsed_time() > MAX_TRIAL_TIME_MILLISECONDS){
+        condition.mark_current_trial_unsuccessful();
+        condition.update_current_trial();
+        grid_setup(condition);
+        phase = ExperimentPhase.BEFORE_TRIAL;
+      }
       popMatrix();
       break;
     case FINISHED: 
@@ -200,6 +236,14 @@ void mouseClicked() {
              condition.update_current_trial();
              phase = ExperimentPhase.BEFORE_TRIAL;
           }
+      }else{
+        condition.add_trial_incorrect_click();
+        if(condition.get_trial_incorrect_clicks()>= MAX_INCORRECT_CLICKS_PER_TRIAL){
+          //restart trial
+          grid_setup(condition);
+          condition.set_trial_incorrect_clicks(0);
+          phase = ExperimentPhase.BEFORE_TRIAL;
+        }
       }
       break;
     case FINISHED: 
