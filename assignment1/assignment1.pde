@@ -180,11 +180,11 @@ void setup() {
   PFont myFont = createFont("Arial", 32, true); 
   textFont(myFont);
   textAlign(CENTER);
-  // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using colour sequence 1, 5, 15, 30, 50)
+  // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using colour sequence  5, 15, 30, 50)
   conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 5, 0));
-  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
-  conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 60, 0));
-  conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 80, 0));
+  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 15, 0));
+  conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 30, 0));
+  conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
 
   // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using rotate sequence 1, 5, 8, 13, 21)
   conditions.add(new Condition("Condition 6:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 1));
@@ -317,7 +317,6 @@ void mouseClicked() {
     case FINISHED: 
       conditionIndex+=1;
       if(conditionIndex < conditions.size()){
-         print("condiiton is less than size");
          currentCondition = conditions.get(conditionIndex);
          phase = ExperimentPhase.INSTRUCTIONS;
          grid_setup(currentCondition);
