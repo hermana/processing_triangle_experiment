@@ -12,7 +12,9 @@
  
  ExperimentPhase phase;
  Icon[][] grid;
- Condition condition;
+ ArrayList<Condition> conditions = new ArrayList<Condition>();
+ Condition currentCondition;
+ int conditionIndex;
  
   //////////////////////////////// ICON CLASS /////////////////////////////////////////////////////
  
@@ -147,7 +149,7 @@ class Trial {
     }
     
     void print_results(){
-      print(name + " " + get_manipulation_type_str() + " " + str(maxColour) + " " + str(targetColourIncrease) + " " + str(get_total_completion_time()));
+      print("\n" + name + " " + get_manipulation_type_str() + " " + str(maxColour) + " " + str(targetColourIncrease) + " " + str(get_total_completion_time()));
     }
     
   
@@ -179,11 +181,14 @@ void setup() {
   textFont(myFont);
   textAlign(CENTER);
   
-  condition = new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", 
-                                        ManipulationType.COLOUR, 0, 50, 10, 255, 45); 
-  
+  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 255, 45));
+  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 255, 45));
+
+  conditionIndex = 0;
+  currentCondition = conditions.get(conditionIndex);
+  //set currentCondition  
   phase = ExperimentPhase.INSTRUCTIONS;
-  grid_setup(condition);
+  grid_setup(currentCondition);
 }
 
 void draw() {
@@ -196,13 +201,13 @@ void draw() {
       text("Click to continue.", width/2, (height/2)+50);
       break;
     case BEFORE_CONDITION: 
-      text(condition.name, width/2, height/2);
-      text(condition.instructions, width/2, (height/2)+50);
+      text(currentCondition.name, width/2, height/2);
+      text(currentCondition.instructions, width/2, (height/2)+50);
       text("Click to continue.", width/2, (height/2)+200);
       break;
     case BEFORE_TRIAL: 
       fill(0);
-      text("Trial "+ str(condition.currentTrial) +" of "+ str(condition.numTrials), width/2-10, height/2);
+      text("Trial "+ str(currentCondition.currentTrial) +" of "+ str(currentCondition.numTrials), width/2-10, height/2);
       text("Click to continue.", width/2, (height/2)+150);
       break;
     case TRIAL: 
@@ -213,10 +218,10 @@ void draw() {
       translate(width/4, height/4); //TODO: rename to semantic meaning, used them in grid. 
       rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE + (ROW_SIZE*2), GRID_SIZE*COLUMN_SIZE + (COLUMN_SIZE*2));
       grid_draw();
-      if(condition.get_trial_elapsed_time() > MAX_TRIAL_TIME_MILLISECONDS){
-        condition.mark_current_trial_unsuccessful();
-        condition.update_current_trial();
-        grid_setup(condition);
+      if(currentCondition.get_trial_elapsed_time() > MAX_TRIAL_TIME_MILLISECONDS){
+        currentCondition.mark_current_trial_unsuccessful();
+        currentCondition.update_current_trial();
+        grid_setup(currentCondition);
         phase = ExperimentPhase.BEFORE_TRIAL;
       }
       popMatrix();
@@ -240,32 +245,38 @@ void mouseClicked() {
       break;
     case BEFORE_TRIAL: 
       phase = ExperimentPhase.TRIAL;
-      condition.start_trial_timer();
+      currentCondition.start_trial_timer();
       break;
     case TRIAL: 
       if(grid_is_target_clicked()){
-          condition.end_trial_timer();
-          if(condition.currentTrial >= condition.numTrials){
-            condition.print_results();
+          currentCondition.end_trial_timer();
+          if(currentCondition.currentTrial >= currentCondition.numTrials){
+            currentCondition.print_results();
             phase = ExperimentPhase.FINISHED;
           }else{
-             grid_setup(condition);
-             condition.update_current_trial();
+             grid_setup(currentCondition);
+             currentCondition.update_current_trial();
              phase = ExperimentPhase.BEFORE_TRIAL;
           }
       }else{
-        condition.add_trial_incorrect_click();
-        if(condition.get_trial_incorrect_clicks()>= MAX_INCORRECT_CLICKS_PER_TRIAL){
+        currentCondition.add_trial_incorrect_click();
+        if(currentCondition.get_trial_incorrect_clicks()>= MAX_INCORRECT_CLICKS_PER_TRIAL){
           //restart trial
-          grid_setup(condition);
-          condition.set_trial_incorrect_clicks(0);
+          grid_setup(currentCondition);
+          currentCondition.set_trial_incorrect_clicks(0);
           phase = ExperimentPhase.BEFORE_TRIAL;
         }
       }
       break;
     case FINISHED: 
+      conditionIndex+=1;
+      if(conditionIndex < conditions.size()){
+         currentCondition = conditions.get(conditionIndex);
+         phase = ExperimentPhase.INSTRUCTIONS;
+         grid_setup(currentCondition);
+      }
       break;
-}
+  }
 }
 
 /////////////////////////////// HELPERS //////////////////////////////////////////////////////////////////
