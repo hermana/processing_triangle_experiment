@@ -180,15 +180,48 @@ void setup() {
   PFont myFont = createFont("Arial", 32, true); 
   textFont(myFont);
   textAlign(CENTER);
-  
-  conditions.add(new Condition("Condition 6:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 100, 90));
-  conditions.add(new Condition("Condition 5:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 255, 45));
-  conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 45, 0, 10, 0, 90));
-  conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 90));
-  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 255, 0));
-  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 255, 0));
-  //conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 90));
+  // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using colour sequence 1, 5, 15, 30, 50)
+  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 200, 0));
+  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 20, 0));
+  conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
+  conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 30, 0));
+  conditions.add(new Condition("Condition 5:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
 
+  // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using rotate sequence 1, 5, 8, 13, 21)
+  conditions.add(new Condition("Condition 6:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 1));
+  conditions.add(new Condition("Condition 7:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 5));
+  conditions.add(new Condition("Condition 8:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 8));
+  conditions.add(new Condition("Condition 9:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 13));
+  conditions.add(new Condition("Condition 10:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 21));
+     
+  // SCENARIO 2: ALL ELEMENTS HAVE SOME DEGREE OF COLOUR (using colour sequence 1, 5, 15, 30, 50)
+  conditions.add(new Condition("Condition 11:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 1, 0));
+  conditions.add(new Condition("Condition 12:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 5, 0));
+  conditions.add(new Condition("Condition 13:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 15, 0));
+  conditions.add(new Condition("Condition 14:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 30, 0));
+  conditions.add(new Condition("Condition 15:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 50, 0));
+  
+  //SCENARIO 2: ALL ELEMENTS HAVE SOME DEGREE OF ROTATION (using rotate sequence 1, 5, 8, 13, 21)
+  conditions.add(new Condition("Condition 16:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 1));
+  conditions.add(new Condition("Condition 17:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 5));
+  conditions.add(new Condition("Condition 18:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 8));
+  conditions.add(new Condition("Condition 19:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 13));
+  conditions.add(new Condition("Condition 20:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 21));
+  
+  //SCENARIO 3: ALL ELEMENTS HAVE SOME DEGREE OF COLOUR AND MAY ALSO BE ROTATED  (using colour sequence 1, 5, 15, 30, 50)
+  conditions.add(new Condition("Condition 21:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 1, 0));
+  conditions.add(new Condition("Condition 22:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 5, 0));
+  conditions.add(new Condition("Condition 23:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 15, 0));
+  conditions.add(new Condition("Condition 24:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 30, 0));
+  conditions.add(new Condition("Condition 25:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 50, 0));
+  
+  //SCENARIO 4: ALL ELEMENTS HAVE SOME DEGREE OF ROTATION AND MAY ALSO HAVE COLOUR (using rotate sequence 1, 5, 8, 13, 21)
+  conditions.add(new Condition("Condition 16:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 1));
+  conditions.add(new Condition("Condition 17:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 5));
+  conditions.add(new Condition("Condition 18:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 8));
+  conditions.add(new Condition("Condition 19:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 13));
+  conditions.add(new Condition("Condition 20:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 21));
+  
   conditionIndex = 0;
   currentCondition = conditions.get(conditionIndex);
   //set currentCondition  
@@ -299,7 +332,8 @@ void grid_setup(Condition condition) {
     for (int column = 0; column < GRID_SIZE; column++) {
       boolean isTarget = (row == targetRow && column == targetColumn) ? true : false;
       int targetColourParam = condition.maxColour + condition.targetColourIncrease <= 255 ? condition.maxColour + condition.targetColourIncrease : 255;
-      color triangleColour = isTarget && condition.manipulationType == ManipulationType.COLOUR ? color(0, targetColourParam, 0) : grid_generate_triangle_colour(condition.maxColour);
+      //color triangleColour = isTarget && condition.manipulationType == ManipulationType.COLOUR ? color(144, targetColourParam, 144) : grid_generate_triangle_colour(condition.maxColour);
+      color triangleColour = isTarget && condition.manipulationType == ManipulationType.COLOUR ? lerpColor(color(255, 255, 255), color(144, 255, 144), targetColourParam/100) : grid_generate_triangle_colour(condition.maxColour);
       int rotation = isTarget ? condition.maxRotation + condition.targetRotationIncrease : int(random(condition.maxRotation));
       grid[row][column] = new Icon(row, column, radians(rotation), triangleColour, isTarget);
     }
