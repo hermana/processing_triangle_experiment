@@ -181,6 +181,9 @@ void setup() {
   textFont(myFont);
   textAlign(CENTER);
   
+  conditions.add(new Condition("Condition 6:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 100, 90));
+  conditions.add(new Condition("Condition 5:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 255, 45));
+  conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 45, 0, 10, 0, 90));
   conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 90));
   conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 255, 0));
   conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 255, 0));
@@ -222,9 +225,13 @@ void draw() {
       grid_draw();
       if(currentCondition.get_trial_elapsed_time() > MAX_TRIAL_TIME_MILLISECONDS){
         currentCondition.mark_current_trial_unsuccessful();
-        currentCondition.update_current_trial();
-        grid_setup(currentCondition);
-        phase = ExperimentPhase.BEFORE_TRIAL;
+        if(currentCondition.currentTrial < currentCondition.numTrials){
+          currentCondition.update_current_trial();
+          grid_setup(currentCondition);
+          phase = ExperimentPhase.BEFORE_TRIAL;
+        }else{
+          phase = ExperimentPhase.FINISHED;
+        }
       }
       popMatrix();
       break;
