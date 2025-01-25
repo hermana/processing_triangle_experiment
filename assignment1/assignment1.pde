@@ -181,11 +181,10 @@ void setup() {
   textFont(myFont);
   textAlign(CENTER);
   // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using colour sequence 1, 5, 15, 30, 50)
-  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 200, 0));
-  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 20, 0));
-  conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
-  conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 30, 0));
-  conditions.add(new Condition("Condition 5:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
+  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 30, 0));
+  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
+  conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 60, 0));
+  conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 80, 0));
 
   // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using rotate sequence 1, 5, 8, 13, 21)
   conditions.add(new Condition("Condition 6:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 1));
@@ -254,7 +253,7 @@ void draw() {
       stroke(0);
       pushMatrix();
       translate(width/4, height/4); 
-      rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE + (ROW_SIZE*2), GRID_SIZE*COLUMN_SIZE + (COLUMN_SIZE*2));
+      rect(-ROW_SIZE, -TRIANGLE_SIZE-COLUMN_SIZE, GRID_SIZE*ROW_SIZE, GRID_SIZE*COLUMN_SIZE);
       grid_draw();
       if(currentCondition.get_trial_elapsed_time() > MAX_TRIAL_TIME_MILLISECONDS){
         currentCondition.mark_current_trial_unsuccessful();
@@ -263,7 +262,12 @@ void draw() {
           grid_setup(currentCondition);
           phase = ExperimentPhase.BEFORE_TRIAL;
         }else{
-          phase = ExperimentPhase.FINISHED;
+          conditionIndex+=1;
+          if(conditionIndex < conditions.size()){
+             currentCondition = conditions.get(conditionIndex);
+             phase = ExperimentPhase.INSTRUCTIONS;
+             grid_setup(currentCondition);
+          }
         }
       }
       popMatrix();
@@ -313,6 +317,7 @@ void mouseClicked() {
     case FINISHED: 
       conditionIndex+=1;
       if(conditionIndex < conditions.size()){
+         print("condiiton is less than size");
          currentCondition = conditions.get(conditionIndex);
          phase = ExperimentPhase.INSTRUCTIONS;
          grid_setup(currentCondition);
