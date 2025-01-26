@@ -149,7 +149,9 @@ class Trial {
     }
     
     void print_results(){
-      print("\n" + name + " " + get_manipulation_type_str() + " " + str(maxColour) + " " + str(targetColourIncrease) + " " + str(get_total_completion_time()));
+      String maxValue = manipulationType == ManipulationType.COLOUR ? str(maxColour) : str(maxRotation);
+      String targetIncrease = manipulationType == ManipulationType.COLOUR ? str(targetColourIncrease) : str(targetRotationIncrease);
+      print("\n" + name + " " + get_manipulation_type_str() + " " + maxValue + " " + targetIncrease  + " " + str(get_total_completion_time()));
     }
     
   
@@ -180,50 +182,117 @@ void setup() {
   PFont myFont = createFont("Arial", 32, true); 
   textFont(myFont);
   textAlign(CENTER);
-  // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using colour sequence  5, 15, 30, 50)
-  conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 5, 0));
-  conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 15, 0));
-  conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 30, 0));
-  conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
+  // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using colour sequence  5, 15, 30, 50 originally, all were somewhat easy)
+  //conditions.add(new Condition("Condition 1:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 5, 0));
+  //conditions.add(new Condition("Condition 2:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 15, 0));
+  //conditions.add(new Condition("Condition 3:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 30, 0));
+  //conditions.add(new Condition("Condition 4:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 50, 0));
 
+  // Adding more difficult options for Scenario 1
+  //conditions.add(new Condition("Condition 31:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 1, 0));
+  //conditions.add(new Condition("Condition 32:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 2, 0));
+  //conditions.add(new Condition("Condition 33:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 3, 0));
+  //conditions.add(new Condition("Condition 46:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 0, 10, 4, 0));
+
+  
   // SCENARIO 1: ONLY THE BASELINE IS CHANGED (using rotate sequence 1, 5, 8, 13, 21)
-  conditions.add(new Condition("Condition 6:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 1));
-  conditions.add(new Condition("Condition 7:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 5));
-  conditions.add(new Condition("Condition 8:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 8));
-  conditions.add(new Condition("Condition 9:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 13));
-  conditions.add(new Condition("Condition 10:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 21));
-     
+  //conditions.add(new Condition("Condition 6:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 1));
+  //conditions.add(new Condition("Condition 7:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 5));
+  //conditions.add(new Condition("Condition 8:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 8));
+  //conditions.add(new Condition("Condition 9:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 13));
+  //conditions.add(new Condition("Condition 10:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 21));
+    
+  // Trying to find the easy-difficult boundary for Scenario 2 (1 degree is impossible, 5 is easy)   
+  //conditions.add(new Condition("Condition 34:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 2));  
+  //conditions.add(new Condition("Condition 35:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 3));   
+  //conditions.add(new Condition("Condition 36:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 0, 0, 10, 0, 4)); 
+  
+  
   // SCENARIO 2: ALL ELEMENTS HAVE SOME DEGREE OF COLOUR (using colour sequence 1, 5, 15, 30, 50)
-  conditions.add(new Condition("Condition 11:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 1, 0));
-  conditions.add(new Condition("Condition 12:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 5, 0));
-  conditions.add(new Condition("Condition 13:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 15, 0));
-  conditions.add(new Condition("Condition 14:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 30, 0));
-  conditions.add(new Condition("Condition 15:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 50, 0));
+  //conditions.add(new Condition("Condition 11:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 1, 0));
+  //conditions.add(new Condition("Condition 12:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 5, 0));
+  //conditions.add(new Condition("Condition 13:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 15, 0));
+  //conditions.add(new Condition("Condition 14:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 30, 0));
+  //conditions.add(new Condition("Condition 15:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 50, 10, 50, 0));
+  
+  // This seemed relatively easy with a max value of 50% across all increase values. Trying 5% max value and lower target increase 
+  //conditions.add(new Condition("Condition 36:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 5, 10, 1, 0));
+  //conditions.add(new Condition("Condition 37:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 5, 10, 2, 0));
+  //conditions.add(new Condition("Condition 38:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 5, 10, 3, 0));
+  
+  // That was still easy, try a high max value with same increase
+  //conditions.add(new Condition("Condition 47:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 90, 10, 1, 0));
+  //conditions.add(new Condition("Condition 48:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 90, 10, 2, 0));
+  //conditions.add(new Condition("Condition 49:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 90, 10, 3, 0));
+  
+  // Also easy, trying more stuff - medium-ish max value?
+  //conditions.add(new Condition("Condition 53:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 20, 10, 1, 0));
+  //conditions.add(new Condition("Condition 54:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 20, 10, 2, 0));
+  //conditions.add(new Condition("Condition 55:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 20, 10, 3, 0));
+  
+  // Still trying to make it more difficult
+  //conditions.add(new Condition("Condition 56:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 1, 10, 1, 0));
+  //conditions.add(new Condition("Condition 57:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 2, 10, 2, 0));
+  //conditions.add(new Condition("Condition 58:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 0, 3, 10, 3, 0));
   
   //SCENARIO 2: ALL ELEMENTS HAVE SOME DEGREE OF ROTATION (using rotate sequence 1, 5, 8, 13, 21)
-  conditions.add(new Condition("Condition 16:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 1));
-  conditions.add(new Condition("Condition 17:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 5));
-  conditions.add(new Condition("Condition 18:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 8));
-  conditions.add(new Condition("Condition 19:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 13));
-  conditions.add(new Condition("Condition 20:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 21));
+  //conditions.add(new Condition("Condition 16:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 1));
+  //conditions.add(new Condition("Condition 17:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 5));
+  //conditions.add(new Condition("Condition 18:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 8));
+  //conditions.add(new Condition("Condition 19:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 13));
+  //conditions.add(new Condition("Condition 20:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 0, 10, 0, 21));
   
+  //This task was difficult in the above scenarios especially at low increase values. Trying a lower max rotation.
+  //conditions.add(new Condition("Condition 39:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 10, 0, 10, 0, 3));
+  //conditions.add(new Condition("Condition 40:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 10, 0, 10, 0, 5));
+
+
   //SCENARIO 3: ALL ELEMENTS HAVE SOME DEGREE OF COLOUR AND MAY ALSO BE ROTATED  (using colour sequence 1, 5, 15, 30, 50)
-  conditions.add(new Condition("Condition 21:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 1, 0));
-  conditions.add(new Condition("Condition 22:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 5, 0));
-  conditions.add(new Condition("Condition 23:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 15, 0));
-  conditions.add(new Condition("Condition 24:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 30, 0));
-  conditions.add(new Condition("Condition 25:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 50, 0));
+  //conditions.add(new Condition("Condition 21:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 1, 0));
+  //conditions.add(new Condition("Condition 22:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 5, 0));
+  //conditions.add(new Condition("Condition 23:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 15, 0));
+  //conditions.add(new Condition("Condition 24:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 30, 0));
+  //conditions.add(new Condition("Condition 25:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 50, 10, 50, 0));
   
-  //SCENARIO 4: ALL ELEMENTS HAVE SOME DEGREE OF ROTATION AND MAY ALSO HAVE COLOUR (using rotate sequence 1, 5, 8, 13, 21)
-  conditions.add(new Condition("Condition 16:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 1));
-  conditions.add(new Condition("Condition 17:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 5));
-  conditions.add(new Condition("Condition 18:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 8));
-  conditions.add(new Condition("Condition 19:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 13));
-  conditions.add(new Condition("Condition 20:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 21));
+  // Trying to make scenario 3 harder based on previous trials
+  //conditions.add(new Condition("Condition 41:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 10, 10, 1, 0));
+  //conditions.add(new Condition("Condition 42:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 10, 10, 5, 0));
+  //conditions.add(new Condition("Condition 43:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 10, 10, 10, 0));
+  
+  //Trying to make it more difficult
+  //conditions.add(new Condition("Condition 50:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 10, 10, 2, 0));
+  //conditions.add(new Condition("Condition 51:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 10, 10, 3, 0));
+  //conditions.add(new Condition("Condition 52:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 10, 10, 4, 0));
+  
+  // Again trying to make it more difficult
+  //conditions.add(new Condition("Condition 50:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 20, 10, 1, 0));
+  //conditions.add(new Condition("Condition 51:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 20, 10, 2, 0));
+  //conditions.add(new Condition("Condition 52:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 30, 20, 10, 3, 0));
+  
+  // Trying to make more difficult
+  //conditions.add(new Condition("Condition 59:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 50, 1, 10, 1, 0));
+  //conditions.add(new Condition("Condition 60:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 50, 5, 10, 2, 0));
+  //conditions.add(new Condition("Condition 61:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 50, 8, 10, 3, 0));
+  
+  // Another attempt to make it more difficult
+  //conditions.add(new Condition("Condition 62:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 50, 1, 10, 1, 0));
+  conditions.add(new Condition("Condition 63:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 50, 2, 10, 2, 0));
+  conditions.add(new Condition("Condition 64:", "In the next tasks, click on the triangle \n that is more green than the others.", ManipulationType.COLOUR, 50, 3, 10, 3, 0));
+ 
+  
+  //SCENARIO 3: ALL ELEMENTS HAVE SOME DEGREE OF ROTATION AND MAY ALSO HAVE COLOUR (using rotate sequence 1, 5, 8, 13, 21)
+  //conditions.add(new Condition("Condition 26:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 1));
+  //conditions.add(new Condition("Condition 27:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 5));
+  //conditions.add(new Condition("Condition 28:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 8));
+  //conditions.add(new Condition("Condition 29:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 13));
+  //conditions.add(new Condition("Condition 30:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 30, 50, 10, 0, 21));
+
+  // Conditions 29 and 30 felt challenging but not impossible, going to try different max rotation 
+  //conditions.add(new Condition("Condition 44:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 10, 50, 10, 0, 5));
+  //conditions.add(new Condition("Condition 45:", "In the next tasks, click on the triangle \n that is more rotated than the others.", ManipulationType.ROTATION, 10, 50, 10, 0, 8)); 
   
   conditionIndex = 0;
   currentCondition = conditions.get(conditionIndex);
-  //set currentCondition  
   phase = ExperimentPhase.INSTRUCTIONS;
   grid_setup(currentCondition);
 }
@@ -234,6 +303,7 @@ void draw() {
   background(200);
   switch(phase){
     case INSTRUCTIONS:
+      fill(0);
       text("Instructions", width/2, height/2);
       text("Click to continue.", width/2, (height/2)+50);
       break;
@@ -257,13 +327,16 @@ void draw() {
       grid_draw();
       if(currentCondition.get_trial_elapsed_time() > MAX_TRIAL_TIME_MILLISECONDS){
         currentCondition.mark_current_trial_unsuccessful();
+        currentCondition.end_trial_timer();
         if(currentCondition.currentTrial < currentCondition.numTrials){
           currentCondition.update_current_trial();
           grid_setup(currentCondition);
           phase = ExperimentPhase.BEFORE_TRIAL;
         }else{
+          currentCondition.print_results();
           conditionIndex+=1;
           if(conditionIndex < conditions.size()){
+             print("MOVE TO NEXT CONDITION");
              currentCondition = conditions.get(conditionIndex);
              phase = ExperimentPhase.INSTRUCTIONS;
              grid_setup(currentCondition);
